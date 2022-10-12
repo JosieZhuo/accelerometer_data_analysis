@@ -1,0 +1,164 @@
+---
+title: "p8105_hw3_qz2493"
+author: "Qingyue Zhuo qz2493"
+date: "2022-10-11"
+output: github_document
+---
+# Load packages
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+library(p8105.datasets)
+data("ny_noaa")
+
+library(ggridges)
+```
+
+# Problem 1
+## Load the instacard data
+```{r}
+library(p8105.datasets)
+data("instacart")
+```
+
+
+# Problem 2
+## Load and tidy the "accel" dataset
+```{r}
+accel_data = 
+  read_csv("data/accel_data.csv") %>%
+  janitor::clean_names() %>%
+  pivot_longer(
+    activity_1:activity_1440,
+    names_to = "activity",
+    values_to = "observations") %>%
+  mutate(
+    day = factor(day),
+    day = fct_relevel(day, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"),
+    day_type = case_when(
+      day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday") ~ "Weekday",
+      day %in% c("Saturday", "Sunday") ~ "Weekend"
+    )) %>%
+  arrange(week, day)
+      
+```
+### This "accel" dataset has `r nrow(accel_data)` observations of `r ncol(accel_data)` variables. The names of the variables are `r names(accel_data)`.
+
+## Total activiteis over the day
+```{r}
+accel_data %>%
+  group_by(week, day) %>%
+  summarize(total_activity = sum(observations)) %>%
+  pivot_wider(
+    names_from = "day",
+    values_from = "total_activity"
+  ) %>%
+  knitr::kable()
+```
+
+## 24-hour-activity
+```{r}
+accel_data %>%
+  mutate(
+    activity = substring(activity, 10),
+    activity = as.integer(activity)
+  ) %>%
+  ggplot(aes(x = activity, y = observations, color = day)) +
+  geom_line(alpha = 0.5) +
+  scale_x_continuous(
+    breaks = c(0, 120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200, 1320, 1440),
+    labels = c("0", "2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24")) +
+  labs(
+    title = "24-Hour Activity for Each Day",
+    x = "Time of Day",
+    y = "Activity Level"
+  ) +
+  theme(legend.position = "bottom")
+  
+```
+
+# Problem 3
+## Load and tidy the noaa data
+```{r}
+ny_data = 
+  ny_noaa %>%
+  janitor::clean_names() %>%
+  separate(date, into = c("year", "month", "day"), sep = "-")
+```
+
+```{r}
+ny_data =
+  ny_data %>%
+  rename(snow_mm = "snow",
+         prcp_mm = "prcp",
+         snwd_mm = "snwd",
+         tmax_F = "tmax",
+         tmin_F = "tmin")
+
+```
+
+```{r}
+ny_data = 
+  ny_data %>%
+    mutate(tmin_F = as.numeric(tmin_F),
+          tmax_F = as.numeric(tmax_F))
+```
+
+```{r}
+df1 = data.frame(ny_data)
+names(which.max(table(df1$snow_mm, useNA = "ifany"))) 
+```
+###
+
+### how to ensure that observations for temperature, precipitation, and snowfall are given in reasonable units
+
+### what are the most commonly observed values? why?
+```{r}
+
+```
+
+### two- panel- plot-
+     a. average max temperature in January in each station across the year
+     b. average max temperature in July in each station across the year
+```{r}
+
+```
+
+## two-panel-plot
+    a. tmax vs. tmin for the full dataset- non-scatter plot
+    b. distribution of snowfall values greater than 0 and less than 100 separately by year
+
+
+```{r}
+plot_1 = 
+  ny_data %>%
+  group_by(id, year, month) %>%
+  filter(month %in% c("07","01")) %>%
+  summarize(tmax_mean = mean(tmax_F,na.rm = TRUE, color = id)) %>%
+  ggplot(aes(x = year, y = tmax_mean,group = id)) +
+  geom_point() + geom_path() +
+  facet_grid( ~ month)
+
+plot_1
+```
+
+```{r}
+plot2 = 
+  ny_data %>%
+  ggplot(aes(x = tmax_F, y = tmin_F)) +
+  geom_hex()
+
+
+plot3 = 
+  ny_data %>%
+  group_by(id, year, month) %>%
+  filter( snow_mm < 100 & snow_mm > 0) %>%
+  ggplot(aes(x = snow_mm, y = year)) +
+  geom_density_ridges()
+
+
+```
+
+
+
