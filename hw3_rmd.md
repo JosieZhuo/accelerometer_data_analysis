@@ -80,7 +80,7 @@ accel_data %>%
     activity = as.integer(activity)
   ) %>%
   ggplot(aes(x = activity, y = observations, color = day)) +
-  geom_line() +
+  geom_line(alpha = 0.5) +
   scale_x_continuous(
     breaks = c(0, 120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200, 1320, 1440),
     labels = c("0", "2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24")) +
@@ -105,6 +105,32 @@ ny_data =
   separate(date, into = c("year", "month", "day"), sep = "-")
 ```
 
+``` r
+ny_data =
+  ny_data %>%
+  rename(snow_mm = "snow",
+         prcp_mm = "prcp",
+         snwd_mm = "snwd",
+         tmax_F = "tmax",
+         tmin_F = "tmin")
+```
+
+``` r
+ny_data = 
+  ny_data %>%
+    mutate(tmin_F = as.numeric(tmin_F),
+          tmax_F = as.numeric(tmax_F))
+```
+
+``` r
+df1 = data.frame(ny_data)
+names(which.max(table(df1$snow_mm, useNA = "ifany"))) 
+```
+
+    ## [1] "0"
+
+### 
+
 ### how to ensure that observations for temperature, precipitation, and snowfall are given in reasonable units
 
 ### what are the most commonly observed values? why?
@@ -118,3 +144,42 @@ ny_data =
 
     a. tmax vs. tmin for the full dataset- non-scatter plot
     b. distribution of snowfall values greater than 0 and less than 100 separately by year
+
+``` r
+plot_1 = 
+  ny_data %>%
+  group_by(id, year, month) %>%
+  filter(month %in% c("07","01")) %>%
+  summarize(tmax_mean = mean(tmax_F,na.rm = TRUE, color = id)) %>%
+  ggplot(aes(x = year, y = tmax_mean,group = id)) +
+  geom_point() + geom_path() +
+  facet_grid( ~ month)
+```
+
+    ## `summarise()` has grouped output by 'id', 'year'. You can override using the
+    ## `.groups` argument.
+
+``` r
+plot_1
+```
+
+    ## Warning: Removed 5970 rows containing missing values (geom_point).
+
+    ## Warning: Removed 5931 row(s) containing missing values (geom_path).
+
+![](hw3_rmd_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
+plot2 = 
+  ny_data %>%
+  ggplot(aes(x = tmax_F, y = tmin_F)) +
+  geom_hex()
+
+
+plot3 = 
+  ny_data %>%
+  group_by(id, year, month) %>%
+  filter( snow_mm < 100 & snow_mm > 0) %>%
+  ggplot(aes(x = snow_mm, y = year)) +
+  geom_density_ridges()
+```
