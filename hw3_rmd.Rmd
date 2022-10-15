@@ -15,6 +15,7 @@ data("ny_noaa")
 library(p8105.datasets)
 data("instacart")
 
+library(gridExtra)
 library(ggridges)
 ```
 
@@ -155,33 +156,25 @@ accel_data %>%
   ) +
   theme(legend.position = "bottom")
 ```
+
 My conclusions are:
 1. For each day in a week, the lowest activity always happens between 22:00 pm to 5:00 am, which may due to sleep.
 2. Activity on Sundays and Saturdays are lower than weekdays in general. However, around 11:00 am on Sunday shows an extremely high activity level.
 3. On weekday evening between 8:00 to 10:00 pm, there is also a hight activity level.
+
 ### Problem 3
 #### Load and tidy the noaa data
 ```{r}
 ny_data = 
   ny_noaa %>%
   janitor::clean_names() %>%
-  separate(date, into = c("year", "month", "day"), sep = "-")
-```
-
-```{r}
-ny_data =
-  ny_data %>%
+  separate(date, into = c("year", "month", "day"), sep = "-") %>%
   rename(snow_mm = "snow",
          prcp_mm = "prcp",
          snwd_mm = "snwd",
          tmax_F = "tmax",
-         tmin_F = "tmin")
-```
-
-```{r}
-ny_data = 
-  ny_data %>%
-    mutate(tmin_F = as.numeric(tmin_F),
+         tmin_F = "tmin") %>%
+  mutate(tmin_F = as.numeric(tmin_F),
           tmax_F = as.numeric(tmax_F))
 ```
 
@@ -190,18 +183,9 @@ df1 = data.frame(ny_data)
 names(which.max(table(df1$snow_mm, useNA = "ifany"))) 
 ```
 
-### two- panel- plot-
-     a. average max temperature in January in each station across the year
-     b. average max temperature in July in each station across the year
-```{r}
+For snowfall, the most commonly observed value is "0", because there is no snow for most days in NY in a year.
 
-```
-
-## two-panel-plot
-    a. tmax vs. tmin for the full dataset- non-scatter plot
-    b. distribution of snowfall values greater than 0 and less than 100 separately by year
-
-
+#### two-panel-plot
 ```{r}
 plot_1 = 
   ny_data %>%
@@ -214,6 +198,10 @@ plot_1 =
 
 plot_1
 ```
+
+1. The max temperatures in January are between -200 and 100; while the max temperatures in July are between 100 and 400, there is no crossover.
+2. The fluctuation pattern in January almost matches with July, indicating certain years have higher/lower temperatures across the year compared with other years.
+3. One outlier is the max temperature in January in 1982; another outlier is the max temperature in July in 1988, both of which are extremely low.
 
 ```{r}
 plot2 = 
@@ -229,8 +217,8 @@ plot3 =
   ggplot(aes(x = snow_mm, y = year)) +
   geom_density_ridges()
 
-
+grid.arrange(plot2, plot3, nrow = 1)
 ```
 
-
+The noaa data set has `r nrow(ny_data)`variables of `r ncol(ny_data)`observations. The variables are `r names(ny_data)`. The missing data is not a big issue as long as each weather station only collects a subset of these variables and they can get the observations they want.
 
