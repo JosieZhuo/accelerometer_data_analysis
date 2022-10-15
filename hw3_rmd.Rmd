@@ -95,7 +95,6 @@ ny_data =
          snwd_mm = "snwd",
          tmax_F = "tmax",
          tmin_F = "tmin")
-
 ```
 
 ```{r}
