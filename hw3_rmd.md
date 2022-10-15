@@ -182,7 +182,7 @@ activity_type, observations, day_type.
 
 ``` r
 accel_data %>%
-  group_by(week, day) %>%
+  group_by(day) %>%
   summarize(total_activity = sum(observations)) %>%
   pivot_wider(
     names_from = "day",
@@ -191,26 +191,12 @@ accel_data %>%
   knitr::kable()
 ```
 
-    ## `summarise()` has grouped output by 'week'. You can override using the
-    ## `.groups` argument.
+|  Monday | Tuesday | Wednesday | Thursday |  Friday | Saturday |  Sunday |
+|--------:|--------:|----------:|---------:|--------:|---------:|--------:|
+| 1858699 | 1799238 |   2129772 |  2091151 | 2291711 |  1369237 | 1919213 |
 
-| week |    Monday |  Tuesday | Wednesday | Thursday |   Friday | Saturday | Sunday |
-|-----:|----------:|---------:|----------:|---------:|---------:|---------:|-------:|
-|    1 |  78828.07 | 307094.2 |    340115 | 355923.6 | 480542.6 |   376254 | 631105 |
-|    2 | 295431.00 | 423245.0 |    440962 | 474048.0 | 568839.0 |   607175 | 422018 |
-|    3 | 685910.00 | 381507.0 |    468869 | 371230.0 | 467420.0 |   382928 | 467052 |
-|    4 | 409450.00 | 319568.0 |    434460 | 340291.0 | 154049.0 |     1440 | 260617 |
-|    5 | 389080.00 | 367824.0 |    445366 | 549658.0 | 620860.0 |     1440 | 138421 |
-
-The pattern of activity includes: 1. The activity of day fluctuated
-extensively and no apparent trend exists. 2. The Saturday activity of
-forth and fifth week is extremely low, which can be counted as outliers,
-indicating the machine may have some problems during these two days. 3.
-For the first three weeks, weekend activity is higher than weekday
-activity; but for the last two weeks, trend reverses. 4. Viewed
-vertically, there is great variance in the amount of activity on Monday,
-Friday, and weekends across weeks; while there is smaller separation on
-Tuesdays, Wednesdays and Thursdays.
+We can conclude from the table: patient has lower activity level during
+weekends compared with weekdays.
 
 #### 24-hour-activity
 
@@ -261,11 +247,17 @@ ny_data =
 ```
 
 ``` r
-df1 = data.frame(ny_data)
-names(which.max(table(df1$snow_mm, useNA = "ifany"))) 
+ny_data %>%
+  count(snow_mm) %>%
+  top_n(1)
 ```
 
-    ## [1] "0"
+    ## Selecting by n
+
+    ## # A tibble: 1 × 2
+    ##   snow_mm       n
+    ##     <int>   <int>
+    ## 1       0 2008508
 
 For snowfall, the most commonly observed value is “0”, because there is
 no snow for most days in NY in a year.
@@ -307,7 +299,6 @@ plot2 =
   ny_data %>%
   ggplot(aes(x = tmax_F, y = tmin_F)) +
   geom_hex()
-
 
 plot3 = 
   ny_data %>%

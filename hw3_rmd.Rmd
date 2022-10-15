@@ -122,7 +122,7 @@ I generated binary variable called "day_type" based on the day values, and pivot
 #### Total activiteis over the day
 ```{r}
 accel_data %>%
-  group_by(week, day) %>%
+  group_by(day) %>%
   summarize(total_activity = sum(observations)) %>%
   pivot_wider(
     names_from = "day",
@@ -131,11 +131,7 @@ accel_data %>%
   knitr::kable()
 ```
 
-The pattern of activity includes:
-1. The activity of day fluctuated extensively and no apparent trend exists.
-2. The Saturday activity of forth and fifth week is extremely low, which can be counted as outliers, indicating the machine may have some problems during these two days.
-3. For the first three weeks, weekend activity is higher than weekday activity; but for the last two weeks, trend reverses.
-4. Viewed vertically, there is great variance in the amount of activity on Monday, Friday, and weekends across weeks; while there is smaller separation on Tuesdays, Wednesdays and Thursdays.
+We can conclude from the table: patient has lower activity level during weekends compared with weekdays.
 
 #### 24-hour-activity
 ```{r}
@@ -179,8 +175,10 @@ ny_data =
 ```
 
 ```{r}
-df1 = data.frame(ny_data)
-names(which.max(table(df1$snow_mm, useNA = "ifany"))) 
+ny_data %>%
+  count(snow_mm) %>%
+  top_n(1)
+
 ```
 
 For snowfall, the most commonly observed value is "0", because there is no snow for most days in NY in a year.
@@ -208,7 +206,6 @@ plot2 =
   ny_data %>%
   ggplot(aes(x = tmax_F, y = tmin_F)) +
   geom_hex()
-
 
 plot3 = 
   ny_data %>%
