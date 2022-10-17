@@ -172,7 +172,7 @@ accel_data =
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
-I generated binary variable called “day_type” based on the day values,
+I generated a binary variable called “day_type” based on the day values,
 and pivoted longer the data set according to activity_type and
 corresponding observations. The final data set has 50400 observations of
 6 variables. The names of the variables are week, day_id, day,

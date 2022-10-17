@@ -117,7 +117,7 @@ accel_data =
   arrange(week, day)
 ```
 
-I generated binary variable called "day_type" based on the day values, and pivoted longer the data set according to activity_type and corresponding observations. The final data set has `r nrow(accel_data)` observations of `r ncol(accel_data)` variables. The names of the variables are `r names(accel_data)`. 
+I generated a binary variable called "day_type" based on the day values, and pivoted longer the data set according to activity_type and corresponding observations. The final data set has `r nrow(accel_data)` observations of `r ncol(accel_data)` variables. The names of the variables are `r names(accel_data)`. 
 
 #### Total activiteis over the day
 ```{r}
