@@ -192,6 +192,11 @@ plot_1 =
   summarize(tmax_mean = mean(tmax_F,na.rm = TRUE, color = id)) %>%
   ggplot(aes(x = year, y = tmax_mean,group = id)) +
   geom_point() + geom_path() +
+  theme(axis.text.x = element_text(
+    angle = 90,
+    vjust = 0.5,
+    hjust = 1
+  ))+
   facet_grid( ~ month)
 
 plot_1
