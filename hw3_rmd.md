@@ -196,7 +196,7 @@ accel_data %>%
 | 1858699 | 1799238 |   2129772 |  2091151 | 2291711 |  1369237 | 1919213 |
 
 We can conclude from the table: patient has lower activity level during
-weekends compared with weekdays.
+weekends(especially on Saturday) compared with weekdays.
 
 #### 24-hour-activity
 
@@ -224,9 +224,9 @@ accel_data %>%
 My conclusions are: 1. For each day in a week, the lowest activity
 always happens between 22:00 pm to 5:00 am, which may due to sleep. 2.
 Activity on Sundays and Saturdays are lower than weekdays in general.
-However, around 11:00 am on Sunday shows an extremely high activity
-level. 3. On weekday evening between 8:00 to 10:00 pm, there is also a
-hight activity level.
+However, there is an extremely high activity around 11:00 am on Sunday.
+3. On weekday evening between 8:00 p.m. to 10:00 p.m., there is also a
+high activity level.
 
 ### Problem 3
 
@@ -314,7 +314,7 @@ grid.arrange(plot2, plot3, nrow = 1)
 
 <img src="hw3_rmd_files/figure-gfm/unnamed-chunk-13-1.png" width="90%" />
 
-The noaa data set has 2595176variables of 9observations. The variables
+The noaa data set has 2595176 variables of 9observations. The variables
 are id, year, month, day, prcp_mm, snow_mm, snwd_mm, tmax_F, tmin_F. The
 missing data is not a big issue as long as each weather station only
 collects a subset of these variables and they can get the observations

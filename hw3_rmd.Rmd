@@ -131,7 +131,7 @@ accel_data %>%
   knitr::kable()
 ```
 
-We can conclude from the table: patient has lower activity level during weekends compared with weekdays.
+We can conclude from the table: patient has lower activity level during weekends(especially on Saturday) compared with weekdays.
 
 #### 24-hour-activity
 ```{r}
@@ -155,8 +155,8 @@ accel_data %>%
 
 My conclusions are:
 1. For each day in a week, the lowest activity always happens between 22:00 pm to 5:00 am, which may due to sleep.
-2. Activity on Sundays and Saturdays are lower than weekdays in general. However, around 11:00 am on Sunday shows an extremely high activity level.
-3. On weekday evening between 8:00 to 10:00 pm, there is also a hight activity level.
+2. Activity on Sundays and Saturdays are lower than weekdays in general. However, there is an extremely high activity around 11:00 am on Sunday.
+3. On weekday evening between 8:00 p.m. to 10:00 p.m., there is also a high activity level.
 
 ### Problem 3
 #### Load and tidy the noaa data
@@ -217,5 +217,5 @@ plot3 =
 grid.arrange(plot2, plot3, nrow = 1)
 ```
 
-The noaa data set has `r nrow(ny_data)`variables of `r ncol(ny_data)`observations. The variables are `r names(ny_data)`. The missing data is not a big issue as long as each weather station only collects a subset of these variables and they can get the observations they want.
+The noaa data set has `r nrow(ny_data)` variables of `r ncol(ny_data)`observations. The variables are `r names(ny_data)`. The missing data is not a big issue as long as each weather station only collects a subset of these variables and they can get the observations they want.
 
